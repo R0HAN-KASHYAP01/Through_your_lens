@@ -11,7 +11,7 @@ const FACTS = [
   { label: "Challenge dates", value: "15 – 20 October 2026", accent: "var(--yellow)" },
   { label: "Submission deadline", value: "12:00 PM, 20 October", accent: "var(--orange)" },
   { label: "Results announced", value: "20 October 2026", accent: "var(--purple)" },
-  { label: "Entry", value: "One color, one photo per person", accent: "var(--blue)" },
+  { label: "Entry", value: "One color, one Moodboard per person", accent: "var(--blue)" },
 ];
 
 const TIMELINE = [
