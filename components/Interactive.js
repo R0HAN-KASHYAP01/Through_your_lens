@@ -51,7 +51,10 @@ export default function Interactive() {
       const d = await res.json();
       if (!res.ok) throw new Error(d.error || "Something went wrong");
       await refresh();
-      document.getElementById("spin")?.scrollIntoView({ behavior: "smooth" });
+      // wait for React to re-render before scrolling
+      setTimeout(() => {
+        document.getElementById("spin")?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 100);
     } catch (err) {
       setError(err.message);
     }
@@ -63,7 +66,10 @@ export default function Interactive() {
     setName("");
     setEmail("");
     await refresh();
-    document.getElementById("register")?.scrollIntoView({ behavior: "smooth" });
+    // the register form only exists after re-render, so wait a moment
+    setTimeout(() => {
+      document.getElementById("register")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 100);
   }
 
   const registered = !!data.registered;
@@ -85,26 +91,53 @@ export default function Interactive() {
             <form onSubmit={submit} className="card space-y-5 p-6 sm:p-8" noValidate={false}>
               <div>
                 <label htmlFor="name" className="label">Full name</label>
-                <input id="name" className="field" placeholder="Your name" autoComplete="name"
-                  value={name} onChange={(e) => setName(e.target.value)} required />
+                <input
+                  id="name"
+                  className="field"
+                  placeholder="Your name"
+                  autoComplete="name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  required
+                />
               </div>
               <div>
                 <label htmlFor="email" className="label">Email address</label>
-                <input id="email" className="field" type="email" placeholder="you@example.com"
-                  autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+                <input
+                  id="email"
+                  className="field"
+                  type="email"
+                  placeholder="you@example.com"
+                  autoComplete="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
               </div>
               <button disabled={busy} className="btn btn-primary w-full">
                 {busy ? "Submitting..." : "Submit and continue"}
               </button>
-              {error && <p role="alert" className="text-center text-sm font-medium text-brick">{error}</p>}
+              {error && (
+                <p role="alert" className="text-center text-sm font-medium text-brick">
+                  {error}
+                </p>
+              )}
             </form>
           </div>
         </Section>
       )}
 
       {/* STEP 2 */}
-      <Section id="spin" n={registered ? "1" : "2"} title="Spin for your color" subtitle="One spin per email. Your color is final.">
-        <div className="card relative mb-10 flex w-full max-w-md items-center gap-4 p-5">
+      <Section
+        id="spin"
+        n={registered ? "1" : "2"}
+        title="Spin for your color"
+        subtitle="One spin per email. Your color is final."
+      >
+        <div
+          id="user-card"
+          className="card relative mb-10 flex w-full max-w-md scroll-mt-24 items-center gap-4 p-5"
+        >
           <div
             className="grid h-12 w-12 shrink-0 place-items-center border-2 border-ink font-display text-lg font-bold text-ink"
             style={{ background: data.spun && data.hex ? data.hex : "var(--yellow)" }}
@@ -125,7 +158,10 @@ export default function Interactive() {
           </span>
         </div>
         {registered && (
-          <button onClick={notYou} className="-mt-6 mb-10 text-xs text-charcoal underline underline-offset-4">
+          <button
+            onClick={notYou}
+            className="-mt-6 mb-10 text-xs text-charcoal underline underline-offset-4"
+          >
             Not you? Use a different email
           </button>
         )}
@@ -144,7 +180,12 @@ export default function Interactive() {
       </Section>
 
       {/* STEP 3 */}
-      <Section id="upload" n={registered ? "2" : "3"} title="Upload your photograph" subtitle="One photo per person. Make it count.">
+      <Section
+        id="upload"
+        n={registered ? "2" : "3"}
+        title="Upload your photograph"
+        subtitle="One photo per person. Make it count."
+      >
         <PhotoUpload
           verified={registered}
           photo={data.photo}

@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import JoinButton from "@/components/JoinButton";
 
 const LINKS = [
   ["Home", "#top"],
@@ -43,9 +44,9 @@ export default function Nav() {
             </li>
           ))}
           <li>
-            <a href="#register" className="btn btn-primary !py-2 !px-4 text-sm">
+            <JoinButton className="btn btn-primary !py-2 !px-4 text-sm">
               Join the Challenge
-            </a>
+            </JoinButton>
           </li>
         </ul>
 
@@ -74,9 +75,9 @@ export default function Nav() {
             </li>
           ))}
           <li className="pt-4">
-            <a href="#register" onClick={() => setOpen(false)} className="btn btn-primary w-full">
+            <JoinButton className="btn btn-primary w-full" onClick={() => setOpen(false)}>
               Join the Challenge
-            </a>
+            </JoinButton>
           </li>
         </ul>
       )}

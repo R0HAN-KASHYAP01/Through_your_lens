@@ -1,12 +1,22 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Reveal from "@/components/Reveal";
 
 const TILT = [-1.2, 0.8, -0.5, 1.2, -0.9, 0.6];
+const SPEED = 60; // pixels per second, raise for faster
 
 export default function References({ items = [] }) {
   const [open, setOpen] = useState(null);
+  const [itemW, setItemW] = useState(0);
 
+  const wrapRef = useRef(null);
+  const trackRef = useRef(null);
+  const offsetRef = useRef(0);
+  const hoverRef = useRef(false);
+  const openRef = useRef(null);
+  openRef.current = open;
+
+  // lightbox keyboard controls
   useEffect(() => {
     if (open === null) return;
     const n = items.length;
@@ -19,6 +29,45 @@ export default function References({ items = [] }) {
     return () => window.removeEventListener("keydown", onKey);
   }, [open, items.length]);
 
+  // item width: 4 visible on desktop, 2 on phones
+  useEffect(() => {
+    const el = wrapRef.current;
+    if (!el) return;
+    const measure = () => {
+      const visible = window.innerWidth >= 768 ? 4 : 2;
+      setItemW(el.clientWidth / visible);
+    };
+    measure();
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
+  }, [items.length]);
+
+  // automatic right-to-left movement
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track || !itemW || items.length === 0) return;
+
+    const loopWidth = itemW * items.length;
+    let last = performance.now();
+    let raf;
+
+    const tick = (now) => {
+      const dt = Math.min((now - last) / 1000, 0.1);
+      last = now;
+      if (!hoverRef.current && openRef.current === null) {
+        offsetRef.current = (offsetRef.current + SPEED * dt) % loopWidth;
+        track.style.transform = `translate3d(${-offsetRef.current}px, 0, 0)`;
+      }
+      raf = requestAnimationFrame(tick);
+    };
+
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [itemW, items.length]);
+
+  // three copies so there is never a gap
+  const loop = [...items, ...items, ...items];
+
   return (
     <section id="inspiration" className="mx-auto w-full max-w-6xl px-4 py-14 sm:py-20">
       <Reveal className="mb-10 text-center">
@@ -29,22 +78,48 @@ export default function References({ items = [] }) {
 
       {items.length === 0 ? (
         <p className="text-center text-charcoal">
-          Add images to <code>public/references/</code> and they will appear here.
+          Add images to <code>public/</code> and they will appear here.
         </p>
       ) : (
-        <div className="columns-2 gap-4 md:columns-3 lg:columns-4">
-          {items.map((img, i) => (
-            <button
-              key={img.src}
-              onClick={() => setOpen(i)}
-              className="polaroid group mb-5 block w-full break-inside-avoid text-left transition duration-300 hover:z-10 hover:scale-[1.03]"
-              style={{ transform: `rotate(${TILT[i % TILT.length]}deg)` }}
-              aria-label={`View ${img.label}`}
-            >
-              <img src={img.src} alt={img.label} loading="lazy" className="h-auto w-full" />
-              <span className="hand mt-1.5 block truncate text-xl capitalize text-ink">{img.label}</span>
-            </button>
-          ))}
+        <div
+          ref={wrapRef}
+          className="overflow-hidden py-7"
+          onMouseEnter={() => (hoverRef.current = true)}
+          onMouseLeave={() => (hoverRef.current = false)}
+          style={{ visibility: itemW ? "visible" : "hidden" }}
+        >
+          <div ref={trackRef} className="flex w-max will-change-transform">
+            {loop.map((img, i) => {
+              const index = i % items.length;
+              const isCopy = i >= items.length;
+              return (
+                <div
+                  key={`${img.src}-${i}`}
+                  className="shrink-0 px-2"
+                  style={{ width: itemW }}
+                >
+                  <button
+                    onClick={() => setOpen(index)}
+                    className="polaroid group block w-full text-left transition duration-300 hover:z-10 hover:scale-[1.03]"
+                    style={{ transform: `rotate(${TILT[index % TILT.length]}deg)` }}
+                    aria-label={`View ${img.label}`}
+                    aria-hidden={isCopy || undefined}
+                    tabIndex={isCopy ? -1 : undefined}
+                  >
+                    <img
+                      src={img.src}
+                      alt={isCopy ? "" : img.label}
+                      draggable={false}
+                      className="aspect-[4/5] w-full object-cover"
+                    />
+                    <span className="hand mt-1.5 block truncate text-xl capitalize text-ink">
+                      {img.label}
+                    </span>
+                  </button>
+                </div>
+              );
+            })}
+          </div>
         </div>
       )}
 
@@ -62,8 +137,11 @@ export default function References({ items = [] }) {
             className="max-h-full max-w-full object-contain"
             onClick={(e) => e.stopPropagation()}
           />
-          <button onClick={() => setOpen(null)} aria-label="Close"
-            className="btn btn-primary absolute right-4 top-4 !bg-paper !text-ink !py-2 !px-4">
+          <button
+            onClick={() => setOpen(null)}
+            aria-label="Close"
+            className="btn btn-primary absolute right-4 top-4 !bg-paper !text-ink !py-2 !px-4"
+          >
             ✕
           </button>
           {items.length > 1 && (

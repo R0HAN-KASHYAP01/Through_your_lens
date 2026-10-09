@@ -1,26 +1,26 @@
 import { EVENT } from "@/lib/event";
+import JoinButton from "@/components/JoinButton";
 
-// color tiles are used until you add real photos to public/references/
-const FALLBACK = ["#F6C945", "#F58232", "#2678C8", "#E7473D"];
+// same positions and colors as the original collage
+const HERO_IMAGES = [
+  { src: "/yellow.jpeg", label: "Yellow photograph" },
+  { src: "/Orange.jpeg", label: "Orange photograph" },
+  { src: "/Blue.jpeg", label: "Blue photograph" },
+  { src: "/Red.jpeg", label: "Red photograph" },
+];
 
-function Card({ src, color, label, className, rotate }) {
+function Card({ src, label, className, rotate }) {
   return (
     <figure
       className={`polaroid absolute transition duration-300 hover:z-20 hover:scale-[1.04] ${className}`}
       style={{ transform: `rotate(${rotate}deg)` }}
     >
-      {src ? (
-        <img src={src} alt={label} className="aspect-[4/5] w-full object-cover" />
-      ) : (
-        <div className="aspect-[4/5] w-full" style={{ background: color }} role="img" aria-label={label} />
-      )}
+      <img src={src} alt={label} className="aspect-[4/5] w-full object-cover" />
     </figure>
   );
 }
 
-export default function Hero({ images = [] }) {
-  const pick = (i) => images[i]?.src ?? null;
-
+export default function Hero() {
   return (
     <header id="top" className="mx-auto w-full max-w-6xl px-4 pb-10 pt-12 sm:pt-16">
       <div className="grid items-center gap-12 lg:grid-cols-2">
@@ -42,7 +42,7 @@ export default function Hero({ images = [] }) {
           <p className="mt-5 max-w-lg text-lg leading-relaxed text-charcoal">{EVENT.description}</p>
 
           <div className="mt-8 flex flex-wrap gap-3">
-            <a href="#register" className="btn btn-primary">Join the Challenge</a>
+            <JoinButton>Join the Challenge</JoinButton>
             <a href="#inspiration" className="btn btn-ghost">Explore the Gallery</a>
           </div>
 
@@ -56,16 +56,12 @@ export default function Hero({ images = [] }) {
         </div>
 
         {/* editorial collage */}
-        <div className="relative mx-auto h-[420px] w-full max-w-md sm:h-[520px]" aria-hidden={images.length === 0}>
+        <div className="relative mx-auto h-[420px] w-full max-w-md sm:h-[520px]">
           <span className="tape left-10 top-0 z-10" />
-          <Card src={pick(0)} color={FALLBACK[0]} label="Yellow reference photo"
-            className="left-0 top-4 w-[52%]" rotate={-6} />
-          <Card src={pick(1)} color={FALLBACK[1]} label="Red reference photo"
-            className="right-0 top-0 w-[46%]" rotate={5} />
-          <Card src={pick(2)} color={FALLBACK[2]} label="Blue reference photo"
-            className="bottom-6 left-[8%] w-[44%]" rotate={4} />
-          <Card src={pick(3)} color={FALLBACK[3]} label="Warm reference photo"
-            className="bottom-0 right-[4%] w-[50%]" rotate={-4} />
+          <Card {...HERO_IMAGES[0]} className="left-0 top-4 w-[52%]" rotate={-6} />
+          <Card {...HERO_IMAGES[1]} className="right-0 top-0 w-[46%]" rotate={5} />
+          <Card {...HERO_IMAGES[2]} className="bottom-6 left-[8%] w-[44%]" rotate={4} />
+          <Card {...HERO_IMAGES[3]} className="bottom-0 right-[4%] w-[50%]" rotate={-4} />
 
           <span className="hand absolute -left-1 top-[46%] z-10 -rotate-6 text-2xl">Look closer</span>
           <span className="hand absolute right-0 top-[44%] z-10 rotate-3 text-2xl">Find your color</span>

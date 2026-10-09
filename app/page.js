@@ -6,16 +6,16 @@ import HowItWorks from "@/components/HowItWorks";
 import Interactive from "@/components/Interactive";
 import References from "@/components/References";
 
-// every image in public/references/ appears in the gallery automatically
+// every image in /public (png, jpg, jpeg, webp, gif, avif) appears in the gallery
 function getReferences() {
-  const dir = path.join(process.cwd(), "public", "references");
+  const dir = path.join(process.cwd(), "public");
   try {
     return fs
       .readdirSync(dir)
       .filter((f) => /\.(png|jpe?g|webp|gif|avif)$/i.test(f))
-      .sort()
+      .sort((a, b) => a.localeCompare(b))
       .map((f) => ({
-        src: `/references/${encodeURIComponent(f)}`,
+        src: `/${encodeURIComponent(f)}`,
         label: f.replace(/\.[^.]+$/, "").replace(/[-_]+/g, " "),
       }));
   } catch {
@@ -29,7 +29,7 @@ export default function Page() {
     <>
       <Nav />
       <main>
-        <Hero images={items.slice(0, 4)} />
+        <Hero />
         <HowItWorks />
         <Interactive />
         <References items={items} />
