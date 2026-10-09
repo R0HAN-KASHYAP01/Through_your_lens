@@ -71,7 +71,7 @@ export default function HowItWorks() {
         <p className="eyebrow">The challenge</p>
         <h2 className="mt-2 font-display text-3xl font-bold sm:text-5xl">Event details</h2>
         <p className="mx-auto mt-3 max-w-xl text-charcoal">
-          Six days, one color and one photograph. All times are in IST.
+          Six days, one color and one photograph.
         </p>
       </Reveal>
 
