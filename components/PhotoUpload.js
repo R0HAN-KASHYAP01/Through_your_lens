@@ -106,7 +106,7 @@ export default function PhotoUpload({ verified, photo, color, hex, onDone }) {
         <p role="status" className="mt-5 inline-block bg-leaf px-3 py-1 text-sm font-semibold text-white">
           Submitted
         </p>
-        <p className="mt-2 text-sm text-charcoal">Only one photo is allowed per person.</p>
+        <p className="mt-2 text-sm text-charcoal">Only one MoodBoard is allowed per person.</p>
       </div>
     );
   }

@@ -4,7 +4,7 @@ import JoinButton from "@/components/JoinButton";
 
 const LINKS = [
   ["Home", "#top"],
-  ["How it works", "#how"],
+  ["Event details", "#details"],
   ["Spin", "#spin"],
   ["Upload", "#upload"],
   ["Inspiration", "#inspiration"],
