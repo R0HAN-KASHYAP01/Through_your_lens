@@ -159,9 +159,7 @@ export default function AdminDashboard({ data, event, adminEmail }) {
         <div className="grid gap-6 md:grid-cols-2">
           <div className="space-y-1 text-sm">
             <p className="hand text-2xl text-brick">{event.tagline}</p>
-            <p><span className="font-semibold">Date:</span> {event.date}</p>
-            <p><span className="font-semibold">Time:</span> {event.time}</p>
-            <p><span className="font-semibold">Venue:</span> {event.venue}</p>
+            
           </div>
           <div>
             <p className="mb-1 text-sm font-semibold">Rules</p>

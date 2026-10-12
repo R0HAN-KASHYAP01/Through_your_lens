@@ -46,13 +46,7 @@ export default function Hero() {
             <a href="#inspiration" className="btn btn-ghost">Explore the Gallery</a>
           </div>
 
-          <ul className="mt-8 flex flex-wrap gap-2 text-sm">
-            {[EVENT.date, EVENT.time, EVENT.venue].map((t) => (
-              <li key={t} className="border border-sand bg-paper px-3 py-1.5 text-charcoal">
-                {t}
-              </li>
-            ))}
-          </ul>
+         
         </div>
 
         {/* editorial collage */}

@@ -8,8 +8,8 @@ const I = (d) => (
 );
 
 const FACTS = [
-  { label: "Challenge dates", value: "15 – 20 October 2026", accent: "var(--yellow)" },
-  { label: "Submission deadline", value: "12:00 PM, 20 October", accent: "var(--orange)" },
+  { label: "Challenge dates", value: "15 – 19 October 2026", accent: "var(--yellow)" },
+  { label: "Submission deadline", value: "19 October", accent: "var(--orange)" },
   { label: "Results announced", value: "20 October 2026", accent: "var(--purple)" },
   { label: "Entry", value: "One color, one Moodboard per person", accent: "var(--blue)" },
 ];
@@ -22,13 +22,13 @@ const TIMELINE = [
     accent: "var(--yellow)",
   },
   {
-    when: "15 – 20 October",
+    when: "15 – 19 October",
     title: "Capture your story",
     text: "Explore your surroundings and photograph something that matches your color.",
     accent: "var(--orange)",
   },
   {
-    when: "20 October, 12:00 PM",
+    when: "19 October",
     title: "Submissions close",
     text: "Upload your one best photograph before noon. Entries after the deadline are not accepted.",
     accent: "var(--blue)",
