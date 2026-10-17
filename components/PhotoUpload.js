@@ -4,6 +4,9 @@ import { useRef, useState } from "react";
 const MAX_SIDE = 1600;
 const OK = ["image/jpeg", "image/png", "image/webp"];
 
+const FORM_URL =
+  "https://docs.google.com/forms/d/1BQilYFtU3fswaPhNpA9psOfm7H6DZyk1IDNdwAilcQc/viewform";
+
 // shrink big phone photos in the browser so they upload fast
 async function compress(file) {
   let bitmap;
@@ -41,7 +44,35 @@ function send(blob, onProgress) {
   });
 }
 
-export default function PhotoUpload({ verified, photo, color, hex, onDone }) {
+// Always-visible notice shown to every participant
+function FormNotice() {
+  return (
+    <div
+      role="note"
+      className="w-full max-w-xl border-2 border-ink p-4 text-left text-sm text-ink sm:p-5"
+      style={{ background: "rgba(246,201,69,.25)" }}
+    >
+      <p className="font-display text-xs font-bold uppercase tracking-widest">
+        Important notice
+      </p>
+      <p className="mt-2 leading-relaxed">
+        To confirm your registration, every participant must also complete the
+        official Google Form. Your entry will be considered valid only after
+        the form has been submitted.
+      </p>
+      <a
+        href={FORM_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="btn btn-primary mt-3 inline-block"
+      >
+        Fill the confirmation form
+      </a>
+    </div>
+  );
+}
+
+function PhotoUploadInner({ verified, photo, color, hex, onDone }) {
   const [file, setFile] = useState(null);
   const [preview, setPreview] = useState("");
   const [busy, setBusy] = useState(false);
@@ -176,6 +207,16 @@ export default function PhotoUpload({ verified, photo, color, hex, onDone }) {
       <p className="mt-4 text-center text-xs text-charcoal">
         You can submit only once, so choose your best frame.
       </p>
+    </div>
+  );
+}
+
+// The notice is rendered here, outside every state, so it never disappears
+export default function PhotoUpload(props) {
+  return (
+    <div className="flex w-full flex-col items-center gap-5">
+      <FormNotice />
+      <PhotoUploadInner {...props} />
     </div>
   );
 }
